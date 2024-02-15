@@ -15,7 +15,8 @@ namespace AppUnipsico.Api.Data.Context
         public DbSet<TeacherModel> Teachers { get; set; }
         public DbSet<InstitutionModel> Institutions { get; set; }
         public DbSet<AddressModel> Address { get; set; }
-
+        public DbSet<StageModel> Stages { get; set; }
+        public DbSet<ConsultModel> Consults { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

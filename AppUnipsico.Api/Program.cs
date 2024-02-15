@@ -1,14 +1,21 @@
 using AppUnipsico.Api.Data.Context;
+using AppUnipsico.Api.Repositories;
+using AppUnipsico.Api.Services.Impl;
+using AppUnipsico.Api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEncryptService, EncryptService>();
+builder.Services.AddScoped<UserRepository>();
+
+builder.Services.AddAutoMapper(typeof(Program));
+
 
 var connectionString = builder.Configuration.GetConnectionString("App");
 
@@ -19,7 +26,6 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
