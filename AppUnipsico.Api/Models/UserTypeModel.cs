@@ -7,6 +7,5 @@
         public string UserTypeDescription { get; set; }
         public DateTime UserTypeDateCreated { get; set; }
         public bool UserTypeIsAdmin { get; set; }
-        public virtual UserBaseModel UserModel { get; set; }
     }
 }

@@ -12,12 +12,6 @@ namespace AppUnipsico.Api.Data.ConfigurationModel
                 .HasKey(u => u.UserId);
 
             builder
-                .HasOne(u => u.UserType)
-                .WithOne(u => u.UserModel)
-                .HasForeignKey<UserBaseModel>(u => u.UserTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder
                 .HasIndex(u => u.UserCpf)
                 .IsUnique();
 

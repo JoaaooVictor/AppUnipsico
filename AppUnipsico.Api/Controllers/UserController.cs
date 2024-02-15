@@ -22,11 +22,11 @@ namespace AppUnipsico.Api.Controllers
             try
             {
                 var result = await _userService.CreateUserAsync(createUserDto);
-                return Ok(result);
+                return Ok($"Usuário registrado no banco de dados. \n {result}");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao cadastrar usuário no banco.");
+                return BadRequest(ex.Message);
             }
         }
 

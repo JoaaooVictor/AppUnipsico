@@ -12,10 +12,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEncryptService, EncryptService>();
+builder.Services.AddScoped<IUserTypeService, UserTypeService>();
+
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<UserTypeRepository>();
 
 builder.Services.AddAutoMapper(typeof(Program));
-
 
 var connectionString = builder.Configuration.GetConnectionString("App");
 

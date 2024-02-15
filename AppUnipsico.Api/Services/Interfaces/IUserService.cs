@@ -5,7 +5,7 @@ namespace AppUnipsico.Api.Services.Interfaces
 {
     public interface IUserService
     {
-        public Task<bool> CreateUserAsync(CreateUserDto userModel);
+        public Task<UserBaseModel> CreateUserAsync(CreateUserDto userModel);
         public Task<UserBaseModel> Login(UserLoginDto userLoginDto);
         public Task<IEnumerable<UserBaseModel>> GetAllTeachers();
         public Task<IEnumerable<UserBaseModel>> GetAllStudents();
