@@ -2,6 +2,7 @@
 using AppUnipsico.Api.Models.Enums;
 using AppUnipsico.Api.Repositories;
 using AppUnipsico.Api.Services.Interfaces;
+using AppUnipsico.Api.Utils;
 using AppUnipsico.Models.DTOs;
 using AutoMapper;
 
@@ -22,29 +23,35 @@ namespace AppUnipsico.Api.Services.Impl
 
         public async Task<bool> CreateUserAsync(CreateUserDto createUser)
         {
-            var userBaseModel = _mapper.Map<UserBaseModel>(createUser);
             bool create;
 
-            var userCreated = await _repository.GetUserByCpf(userBaseModel);
-
-            if (userCreated is null)
+            if (createUser != null)
             {
                 var newUserModel = new UserBaseModel
                 {
-                    UserDisplayName = userBaseModel.UserDisplayName,
-                    UserName = userBaseModel.UserName,
-                    UserCpf = userBaseModel.UserCpf,
-                    UserEmail = userBaseModel.UserEmail,
+                    UserDisplayName = createUser.DisplayName,
+                    UserName = createUser.UserName,
+                    UserCpf = FormatUtility.FormatCpf(createUser.Cpf),
+                    UserEmail = createUser.Email,
                     UserId = Guid.NewGuid(),
                     UserIsActive = true,
-                    UserPassword = _encryptService.HashPassword(userBaseModel.UserPassword),
-                    UserTypeId = userBaseModel.UserTypeId,
-                    UserDateOfBirth = userBaseModel.UserDateOfBirth,
+                    UserPassword = _encryptService.HashPassword(createUser.Password),
+                    UserTypeId = createUser.UserTypeId,
+                    UserDateOfBirth = FormatUtility.FormatDateTime(createUser.DateOfBirth),
                     UserDateCreated = DateTime.Now,
                 };
 
-                await _repository.CreateUserAsync(newUserModel);
-                create = true;
+                var userCreated = _repository.GetUserByCpf(newUserModel);
+
+                if (userCreated is null)
+                {
+                    await _repository.CreateUserAsync(newUserModel);
+                    create = true;
+                }
+                else
+                {
+                    create = false;
+                }
             }
             else
             {

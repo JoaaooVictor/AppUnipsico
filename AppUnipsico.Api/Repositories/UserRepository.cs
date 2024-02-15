@@ -49,7 +49,7 @@ namespace AppUnipsico.Api.Repositories
 
         public async Task<UserBaseModel> GetUserByCpf(UserBaseModel userBaseModel)
         {
-            return await _context.Users.Where(x => x.UserCpf == userBaseModel.UserCpf).FirstAsync();
+            return await _context.Users.Where(x => x.UserCpf.Trim() == userBaseModel.UserCpf.Trim()).FirstAsync();
         }
 
         public async Task<UserBaseModel> GetUserById(Guid userId)

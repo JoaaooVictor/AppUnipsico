@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AppUnipsico.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -19,9 +19,15 @@ namespace AppUnipsico.Api.Controllers
         [Route("cadastro")]
         public async Task<ActionResult> CreateUserAsync(CreateUserDto createUserDto)
         {
-            var result = await _userService.CreateUserAsync(createUserDto);
-
-            return Ok(result);
+            try
+            {
+                var result = await _userService.CreateUserAsync(createUserDto);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao cadastrar usuário no banco.");
+            }
         }
 
         [HttpPost]
@@ -34,7 +40,7 @@ namespace AppUnipsico.Api.Controllers
 
                 if (result is null)
                 {
-                    return Unauthorized("Usuário não autenticado!");
+                    return BadRequest("Usuário não autenticado! Verifique as credênciais");
                 }
 
                 return Ok(result);
