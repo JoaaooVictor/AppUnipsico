@@ -21,12 +21,21 @@ namespace AppUnipsico.Api.Controllers
         {
             try
             {
-                var result = await _userService.CreateUserAsync(createUserDto);
-                return Ok($"Usuário registrado no banco de dados. \n {result}");
+                var userCreate = await _userService.CreateUserAsync(createUserDto);
+
+                if (userCreate != null)
+                {
+                    return Ok(userCreate);
+                }
+                else
+                {
+                    return NotFound("Erro ao cadastrar o usuário!");
+                }
+
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -34,21 +43,14 @@ namespace AppUnipsico.Api.Controllers
         [Route("login")]
         public async Task<ActionResult> LoginUserAsync(UserLoginDto userLoginDto)
         {
-            try
-            {
-                var result = await _userService.Login(userLoginDto);
+            var authorized = await _userService.ValidateCredentials(userLoginDto);
 
-                if (result is null)
-                {
-                    return BadRequest("Usuário não autenticado! Verifique as credênciais");
-                }
-
-                return Ok(result);
-            }
-            catch (Exception)
+            if (!authorized)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return Unauthorized();
             }
+
+            return Ok("Usuário autenticado!");
         }
     }
 }

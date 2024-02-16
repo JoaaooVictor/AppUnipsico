@@ -67,6 +67,13 @@ namespace AppUnipsico.Api.Services.Impl
             return await _repository.LoginUserAsync(userModel);
         }
 
+        public async Task<bool> ValidateCredentials(UserLoginDto userLoginDto)
+        {
+            var response = await Login(userLoginDto);
+
+            return response is null ? false : true;
+        }
+
         public async Task<IEnumerable<UserBaseModel>> GetAllPatients()
         {
             return await _repository.GetUserByType((int)UserTypeEnum.Patient);

@@ -1,6 +1,7 @@
 ﻿using AppUnipsico.Api.Data.Context;
 using AppUnipsico.Api.Models;
 using AppUnipsico.Api.Services.Interfaces;
+using AppUnipsico.Api.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppUnipsico.Api.Repositories
@@ -28,9 +29,11 @@ namespace AppUnipsico.Api.Repositories
         {
             try
             {
-                var user = await _context.Users.SingleOrDefaultAsync(x => x.UserCpf == userModel.UserCpf);
+                var user = await _context.Users.Where(x => x.UserCpf == FormatUtility.FormatCpf(userModel.UserCpf))
+                    .Include(u => u.UserType)
+                    .FirstOrDefaultAsync();
 
-                if (user != null && !string.IsNullOrEmpty(user.UserPassword))
+                if (user != null && !string.IsNullOrEmpty(userModel.UserPassword))
                 {
                     if (_encryptService.VerifyPassword(userModel.UserPassword, user.UserPassword))
                     {

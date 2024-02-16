@@ -8,7 +8,9 @@ namespace AppUnipsico.Api.Profiles
     {
         public UserProfile()
         {
-            CreateMap<UserLoginDto, UserBaseModel>();
+            CreateMap<UserLoginDto, UserBaseModel>()
+                .ForMember(x => x.UserPassword, opt => opt.MapFrom(a => a.Password))
+                .ForMember(x => x.UserCpf, opt => opt.MapFrom(x => x.Cpf));
         }
     }
 }
