@@ -60,14 +60,14 @@ namespace AppUnipsico.Api.Services.Impl
             return null;
         }
 
-        public async Task<UserBaseModel> Login(UserLoginDto userLoginDto)
+        public async Task<UserBaseModel> Login(RequestLoginDto userLoginDto)
         {
             var userModel = _mapper.Map<UserBaseModel>(userLoginDto);
 
             return await _repository.LoginUserAsync(userModel);
         }
 
-        public async Task<bool> ValidateCredentials(UserLoginDto userLoginDto)
+        public async Task<bool> ValidateCredentials(RequestLoginDto userLoginDto)
         {
             var response = await Login(userLoginDto);
 

@@ -41,7 +41,7 @@ namespace AppUnipsico.Api.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult> LoginUserAsync(UserLoginDto userLoginDto)
+        public async Task<ActionResult> LoginUserAsync(RequestLoginDto userLoginDto)
         {
             var authorized = await _userService.ValidateCredentials(userLoginDto);
 
