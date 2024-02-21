@@ -2,34 +2,33 @@
 using AppUnipsico.Web.Services.InterfacesWeb;
 using AppUnipsico.Web.Utils;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 
 namespace AppUnipsico.Web.Services.ImplWeb
 {
     public class UserServiceWeb : IUserServiceWeb
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger _logger;
 
-        public UserServiceWeb(HttpClient httpClient, ILogger logger)
+        public UserServiceWeb(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _logger = logger;
         }
 
-        public Task<ResponseLoginDto> Logar(RequestLoginDto requestLoginDto)
+        public async Task<ResponseLoginDto> Logar(RequestLoginDto requestLoginDto)
         {
-            throw new NotImplementedException();
+            ResponseLoginDto conteudo = new();
+            var response = await _httpClient.PostAsJsonAsync(EndPoints.Login, requestLoginDto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using (var stream = response.Content.ReadAsStreamAsync().Result)
+                {
+                    conteudo = await JsonSerializer.DeserializeAsync<ResponseLoginDto>(stream);
+                }
+            }
+            return conteudo;
         }
-
-        //public async Task<ResponseLoginDto> Logar(RequestLoginDto requestLoginDto)
-        //{
-        //    var request = new HttpRequestMessage(HttpMethod.Post, Url);
-        //    var content = new StringContent("{\r\n    \"Cpf\" : \"45506229895\",\r\n    \"Password\": \"Jotinha21*\"\r\n}", null, "application/json");
-        //    request.Content = content;
-        //    var response = await client.SendAsync(request);
-        //    response.EnsureSuccessStatusCode();
-        //    Console.WriteLine(await response.Content.ReadAsStringAsync());
-        //}
-
     }
 }

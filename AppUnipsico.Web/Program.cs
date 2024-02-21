@@ -1,4 +1,6 @@
 using AppUnipsico.Web;
+using AppUnipsico.Web.Services.ImplWeb;
+using AppUnipsico.Web.Services.InterfacesWeb;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -8,5 +10,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 var baseUrl = "https://localhost:7293";
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUrl) });
+
+builder.Services.AddScoped<IUserServiceWeb, UserServiceWeb>();
 
 await builder.Build().RunAsync();
