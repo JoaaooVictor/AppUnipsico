@@ -132,7 +132,7 @@ namespace AppUnipsico.Api.Migrations
                     b.ToTable("Stages");
                 });
 
-            modelBuilder.Entity("AppUnipsico.Api.Models.UserBaseModel", b =>
+            modelBuilder.Entity("AppUnipsico.Api.Models.UsuarioModel", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -187,7 +187,7 @@ namespace AppUnipsico.Api.Migrations
 
                     b.ToTable("Users");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("UserBaseModel");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("UsuarioModel");
 
                     b.UseTphMappingStrategy();
                 });
@@ -245,21 +245,21 @@ namespace AppUnipsico.Api.Migrations
 
             modelBuilder.Entity("AppUnipsico.Api.Models.PatientModel", b =>
                 {
-                    b.HasBaseType("AppUnipsico.Api.Models.UserBaseModel");
+                    b.HasBaseType("AppUnipsico.Api.Models.UsuarioModel");
 
                     b.HasDiscriminator().HasValue("PatientModel");
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.StudentModel", b =>
                 {
-                    b.HasBaseType("AppUnipsico.Api.Models.UserBaseModel");
+                    b.HasBaseType("AppUnipsico.Api.Models.UsuarioModel");
 
                     b.HasDiscriminator().HasValue("StudentModel");
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.TeacherModel", b =>
                 {
-                    b.HasBaseType("AppUnipsico.Api.Models.UserBaseModel");
+                    b.HasBaseType("AppUnipsico.Api.Models.UsuarioModel");
 
                     b.HasDiscriminator().HasValue("TeacherModel");
                 });
@@ -329,11 +329,11 @@ namespace AppUnipsico.Api.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("AppUnipsico.Api.Models.UserBaseModel", b =>
+            modelBuilder.Entity("AppUnipsico.Api.Models.UsuarioModel", b =>
                 {
                     b.HasOne("AppUnipsico.Api.Models.UserTypeModel", "UserType")
                         .WithOne("UserModel")
-                        .HasForeignKey("AppUnipsico.Api.Models.UserBaseModel", "UserTypeId")
+                        .HasForeignKey("AppUnipsico.Api.Models.UsuarioModel", "UserTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

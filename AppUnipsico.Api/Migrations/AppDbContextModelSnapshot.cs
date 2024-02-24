@@ -47,7 +47,7 @@ namespace AppUnipsico.Api.Migrations
 
                     b.HasKey("AddressId");
 
-                    b.ToTable("Address");
+                    b.ToTable("Address", (string)null);
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.ConsultModel", b =>
@@ -56,27 +56,20 @@ namespace AppUnipsico.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("ConsultDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("ConsultStatus")
                         .HasColumnType("int");
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("ConsultId");
 
                     b.HasIndex("PatientId");
 
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("Consults");
+                    b.ToTable("Consults", (string)null);
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.InstitutionModel", b =>
@@ -97,7 +90,7 @@ namespace AppUnipsico.Api.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.ToTable("Institutions");
+                    b.ToTable("Institutions", (string)null);
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.StageModel", b =>
@@ -115,21 +108,16 @@ namespace AppUnipsico.Api.Migrations
                     b.Property<Guid>("StudentId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("StageId");
 
                     b.HasIndex("InstitutionId");
 
                     b.HasIndex("StudentId");
 
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("Stages");
+                    b.ToTable("Stages", (string)null);
                 });
 
-            modelBuilder.Entity("AppUnipsico.Api.Models.UserBaseModel", b =>
+            modelBuilder.Entity("AppUnipsico.Api.Models.UsuarioModel", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -181,9 +169,9 @@ namespace AppUnipsico.Api.Migrations
 
                     b.HasIndex("UserTypeId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("UserBaseModel");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("UsuarioModel");
 
                     b.UseTphMappingStrategy();
                 });
@@ -210,13 +198,13 @@ namespace AppUnipsico.Api.Migrations
 
                     b.HasKey("UserTypeModelId");
 
-                    b.ToTable("UserTypes");
+                    b.ToTable("UserTypes", (string)null);
 
                     b.HasData(
                         new
                         {
                             UserTypeModelId = 1,
-                            UserTypeDateCreated = new DateTime(2024, 2, 15, 0, 18, 0, 440, DateTimeKind.Local).AddTicks(7128),
+                            UserTypeDateCreated = new DateTime(2024, 2, 23, 0, 55, 47, 907, DateTimeKind.Local).AddTicks(7083),
                             UserTypeDescription = "Paciente do consultório",
                             UserTypeIsAdmin = false,
                             UserTypeName = "Paciente"
@@ -224,7 +212,7 @@ namespace AppUnipsico.Api.Migrations
                         new
                         {
                             UserTypeModelId = 2,
-                            UserTypeDateCreated = new DateTime(2024, 2, 15, 0, 18, 0, 440, DateTimeKind.Local).AddTicks(7148),
+                            UserTypeDateCreated = new DateTime(2024, 2, 23, 0, 55, 47, 907, DateTimeKind.Local).AddTicks(7101),
                             UserTypeDescription = "Aluno de Psicologia",
                             UserTypeIsAdmin = false,
                             UserTypeName = "Aluno"
@@ -232,7 +220,7 @@ namespace AppUnipsico.Api.Migrations
                         new
                         {
                             UserTypeModelId = 3,
-                            UserTypeDateCreated = new DateTime(2024, 2, 15, 0, 18, 0, 440, DateTimeKind.Local).AddTicks(7151),
+                            UserTypeDateCreated = new DateTime(2024, 2, 23, 0, 55, 47, 907, DateTimeKind.Local).AddTicks(7103),
                             UserTypeDescription = "Professor e Admin",
                             UserTypeIsAdmin = true,
                             UserTypeName = "Professor"
@@ -241,21 +229,21 @@ namespace AppUnipsico.Api.Migrations
 
             modelBuilder.Entity("AppUnipsico.Api.Models.PatientModel", b =>
                 {
-                    b.HasBaseType("AppUnipsico.Api.Models.UserBaseModel");
+                    b.HasBaseType("AppUnipsico.Api.Models.UsuarioModel");
 
                     b.HasDiscriminator().HasValue("PatientModel");
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.StudentModel", b =>
                 {
-                    b.HasBaseType("AppUnipsico.Api.Models.UserBaseModel");
+                    b.HasBaseType("AppUnipsico.Api.Models.UsuarioModel");
 
                     b.HasDiscriminator().HasValue("StudentModel");
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.TeacherModel", b =>
                 {
-                    b.HasBaseType("AppUnipsico.Api.Models.UserBaseModel");
+                    b.HasBaseType("AppUnipsico.Api.Models.UsuarioModel");
 
                     b.HasDiscriminator().HasValue("TeacherModel");
                 });
@@ -268,23 +256,7 @@ namespace AppUnipsico.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AppUnipsico.Api.Models.StudentModel", "Student")
-                        .WithMany("Consults")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AppUnipsico.Api.Models.TeacherModel", "Teacher")
-                        .WithMany("Consults")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Patient");
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.InstitutionModel", b =>
@@ -312,20 +284,12 @@ namespace AppUnipsico.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AppUnipsico.Api.Models.TeacherModel", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Institution");
 
                     b.Navigation("Student");
-
-                    b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("AppUnipsico.Api.Models.UserBaseModel", b =>
+            modelBuilder.Entity("AppUnipsico.Api.Models.UsuarioModel", b =>
                 {
                     b.HasOne("AppUnipsico.Api.Models.UserTypeModel", "UserType")
                         .WithMany()
@@ -347,16 +311,6 @@ namespace AppUnipsico.Api.Migrations
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.PatientModel", b =>
-                {
-                    b.Navigation("Consults");
-                });
-
-            modelBuilder.Entity("AppUnipsico.Api.Models.StudentModel", b =>
-                {
-                    b.Navigation("Consults");
-                });
-
-            modelBuilder.Entity("AppUnipsico.Api.Models.TeacherModel", b =>
                 {
                     b.Navigation("Consults");
                 });

@@ -1,5 +1,4 @@
 using AppUnipsico.Api.Data.Context;
-using AppUnipsico.Api.Repositories;
 using AppUnipsico.Api.Services.Impl;
 using AppUnipsico.Api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +10,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IEncryptService, EncryptService>();
-builder.Services.AddScoped<IUserTypeService, UserTypeService>();
-
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<UserTypeRepository>();
+builder.Services.AddScoped<IUsuarioServico, UsuarioServico>();
+builder.Services.AddScoped<ICriptografiaServico, CriptografiaServico>();
+builder.Services.AddScoped<ITipoUsuarioServico, TipoUsuarioServico>();
+builder.Services.AddScoped<IConsultaServico, ConsultaServico>();
 
 builder.Services.AddCors();
 

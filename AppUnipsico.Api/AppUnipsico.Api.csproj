@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Modelos\Dtos\**" />
+    <Content Remove="Modelos\Dtos\**" />
+    <EmbeddedResource Remove="Modelos\Dtos\**" />
+    <None Remove="Modelos\Dtos\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
@@ -20,10 +27,6 @@
     </PackageReference>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Dtos\" />
   </ItemGroup>
 
   <ItemGroup>

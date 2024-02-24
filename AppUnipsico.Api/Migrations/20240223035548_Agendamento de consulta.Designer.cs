@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppUnipsico.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240215031800_Config UserType")]
-    partial class ConfigUserType
+    [Migration("20240223035548_Agendamento de consulta")]
+    partial class Agendamentodeconsulta
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,25 +59,18 @@ namespace AppUnipsico.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("ConsultDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("ConsultStatus")
                         .HasColumnType("int");
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("ConsultId");
 
                     b.HasIndex("PatientId");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("TeacherId");
 
                     b.ToTable("Consults");
                 });
@@ -118,16 +111,11 @@ namespace AppUnipsico.Api.Migrations
                     b.Property<Guid>("StudentId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("StageId");
 
                     b.HasIndex("InstitutionId");
 
                     b.HasIndex("StudentId");
-
-                    b.HasIndex("TeacherId");
 
                     b.ToTable("Stages");
                 });
@@ -219,7 +207,7 @@ namespace AppUnipsico.Api.Migrations
                         new
                         {
                             UserTypeModelId = 1,
-                            UserTypeDateCreated = new DateTime(2024, 2, 15, 0, 18, 0, 440, DateTimeKind.Local).AddTicks(7128),
+                            UserTypeDateCreated = new DateTime(2024, 2, 23, 0, 55, 47, 907, DateTimeKind.Local).AddTicks(7083),
                             UserTypeDescription = "Paciente do consultório",
                             UserTypeIsAdmin = false,
                             UserTypeName = "Paciente"
@@ -227,7 +215,7 @@ namespace AppUnipsico.Api.Migrations
                         new
                         {
                             UserTypeModelId = 2,
-                            UserTypeDateCreated = new DateTime(2024, 2, 15, 0, 18, 0, 440, DateTimeKind.Local).AddTicks(7148),
+                            UserTypeDateCreated = new DateTime(2024, 2, 23, 0, 55, 47, 907, DateTimeKind.Local).AddTicks(7101),
                             UserTypeDescription = "Aluno de Psicologia",
                             UserTypeIsAdmin = false,
                             UserTypeName = "Aluno"
@@ -235,7 +223,7 @@ namespace AppUnipsico.Api.Migrations
                         new
                         {
                             UserTypeModelId = 3,
-                            UserTypeDateCreated = new DateTime(2024, 2, 15, 0, 18, 0, 440, DateTimeKind.Local).AddTicks(7151),
+                            UserTypeDateCreated = new DateTime(2024, 2, 23, 0, 55, 47, 907, DateTimeKind.Local).AddTicks(7103),
                             UserTypeDescription = "Professor e Admin",
                             UserTypeIsAdmin = true,
                             UserTypeName = "Professor"
@@ -271,23 +259,7 @@ namespace AppUnipsico.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AppUnipsico.Api.Models.StudentModel", "Student")
-                        .WithMany("Consults")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AppUnipsico.Api.Models.TeacherModel", "Teacher")
-                        .WithMany("Consults")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Patient");
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.InstitutionModel", b =>
@@ -315,17 +287,9 @@ namespace AppUnipsico.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AppUnipsico.Api.Models.TeacherModel", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Institution");
 
                     b.Navigation("Student");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.UsuarioModel", b =>
@@ -350,16 +314,6 @@ namespace AppUnipsico.Api.Migrations
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.PatientModel", b =>
-                {
-                    b.Navigation("Consults");
-                });
-
-            modelBuilder.Entity("AppUnipsico.Api.Models.StudentModel", b =>
-                {
-                    b.Navigation("Consults");
-                });
-
-            modelBuilder.Entity("AppUnipsico.Api.Models.TeacherModel", b =>
                 {
                     b.Navigation("Consults");
                 });

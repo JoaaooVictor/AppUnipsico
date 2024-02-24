@@ -1,6 +1,6 @@
 ﻿@page "/login"
 @using AppUnipsico.Web.Services.InterfacesWeb
-@inject IUserServiceWeb _userService;
+@inject IUsuarioServicoWeb _userService;
 
 <body>
     <div class="container">
@@ -34,9 +34,9 @@
 
 @code {
 
-    RequestLoginDto request = new RequestLoginDto();
+    RequisicaoLoginDTO request = new RequisicaoLoginDTO();
 
-    public async Task<ResponseLoginDto> Logar(RequestLoginDto request)
+    public async Task<RespostaLoginDTO> Logar(RequisicaoLoginDTO request)
     {
         var response = await _userService.Logar(request);
 

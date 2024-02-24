@@ -11,6 +11,6 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 var baseUrl = "https://localhost:7293";
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUrl) });
 
-builder.Services.AddScoped<IUserServiceWeb, UserServiceWeb>();
+builder.Services.AddScoped<IUsuarioServicoWeb, UsuarioServicoWeb>();
 
 await builder.Build().RunAsync();
