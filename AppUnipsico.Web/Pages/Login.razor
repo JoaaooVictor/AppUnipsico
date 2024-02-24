@@ -8,11 +8,11 @@
             <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
                 <div class="card border-0 shadow rounded-3 my-5">
                     <div class="card-body p-4 p-sm-5">
-                        <h5 class="card-title text-center mb-5 fw-light fs-5">Acesso ao sistema.</h5>
+                        <h5 class="card-title text-center mb-5 fw-light fs-5">Acesso ao sistema</h5>
                         <form>
                             <div class="form-floating mb-3">
                                 <input type="Cpf" @bind="request.Cpf" class="form-control" id="floatingInput" placeholder="123.456.789-00">
-                                <label for="floatingInput">Cpf</label>
+                                <label for="floatingInput">Login - RG</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="password" @bind="request.Password" class="form-control" id="floatingPassword" placeholder="Senha...">
@@ -22,6 +22,9 @@
                                 <button class="btn btn-primary btn-login text-uppercase fw-bold" @onclick="(() => Logar(request))" type="submit">
                                     Sign
                                     in
+                                </button>
+                                <button class="btn btn-primary btn-login text-uppercase fw-bold" @onclick="(() => Logar(request))" type="submit">
+Cadastro
                                 </button>
                             </div>
                         </form>
