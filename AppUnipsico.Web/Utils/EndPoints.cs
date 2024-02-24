@@ -2,6 +2,6 @@
 {
     public static class EndPoints
     {
-        public readonly static string Login = "/user/login";
+        public readonly static string Login = "/usuario/login";
     }
 }

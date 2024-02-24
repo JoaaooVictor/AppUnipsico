@@ -119,18 +119,26 @@ namespace AppUnipsico.Api.Services.Impl
             return null;
         }
 
-        public async Task<string> ValidaCredenciaisAsync(RequisicaoLoginDTO logaUsuarioDto)
+        public async Task<RespostaLoginDTO> ValidaCredenciaisAsync(RequisicaoLoginDTO logaUsuarioDto)
         {
             var response = await LogarUsuarioAsync(logaUsuarioDto);
 
-            if (!string.IsNullOrEmpty(response))
+            if (response is not null)
             {
-                return response.ToString();
+                return new RespostaLoginDTO() 
+                { 
+                    Logado = true,
+                    Token = response,
+                    Mensagem = "Usuário logado com sucesso!"
+                };
             }
-            else
+
+            return new RespostaLoginDTO()
             {
-                return null;
-            }
+                Logado = false,
+                Token = null,
+                Mensagem = "Credênciais inválidas!"
+            };
         }
 
         public string GeraTokenJwt(UsuarioModel usuario)

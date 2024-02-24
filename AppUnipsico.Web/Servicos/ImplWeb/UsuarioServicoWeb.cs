@@ -18,17 +18,9 @@ namespace AppUnipsico.Web.Services.ImplWeb
 
         public async Task<RespostaLoginDTO> Logar(RequisicaoLoginDTO requestLoginDto)
         {
-            RespostaLoginDTO conteudo = new();
-            var response = await _httpClient.PostAsJsonAsync(EndPoints.Login, requestLoginDto);
+            var responseApi = await _httpClient.PostAsJsonAsync(EndPoints.Login, requestLoginDto);
 
-            if (response.IsSuccessStatusCode)
-            {
-                using (var stream = response.Content.ReadAsStreamAsync().Result)
-                {
-                    conteudo = await JsonSerializer.DeserializeAsync<RespostaLoginDTO>(stream);
-                }
-            }
-            return conteudo;
+            return await  responseApi.Content.ReadFromJsonAsync<RespostaLoginDTO>();
         }
     }
 }

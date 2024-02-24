@@ -11,7 +11,7 @@ namespace AppUnipsico.Api.Services.Interfaces
         public Task<UsuarioModel> CriaUsuarioAsync(CriaUsuarioDTO userModel);
         public Task<UsuarioModel> BuscaUsuarioPorId(Guid usuarioId);
         public Task<string> LogarUsuarioAsync(RequisicaoLoginDTO userLoginDto);
-        public Task<string> ValidaCredenciaisAsync(RequisicaoLoginDTO userLoginDto);
+        public Task<RespostaLoginDTO> ValidaCredenciaisAsync(RequisicaoLoginDTO userLoginDto);
         public string GeraTokenJwt(UsuarioModel usuario);
     }
 }

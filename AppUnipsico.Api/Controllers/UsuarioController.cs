@@ -43,14 +43,21 @@ namespace AppUnipsico.Api.Controllers
         [Route("login")]
         public async Task<ActionResult> LogaUsuarioAsync(RequisicaoLoginDTO userLoginDto)
         {
-            var autorizado = await _usuarioServico.ValidaCredenciaisAsync(userLoginDto);
-
-            if (string.IsNullOrEmpty(autorizado))
+            try
             {
-                return Unauthorized();
-            }
+                var resposta = await _usuarioServico.ValidaCredenciaisAsync(userLoginDto);
 
-            return Ok(autorizado);
+                if (resposta.Logado)
+                {
+                    return Ok(resposta);
+                }
+
+                return Unauthorized(resposta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

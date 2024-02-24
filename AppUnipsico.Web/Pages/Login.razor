@@ -19,12 +19,24 @@
                                 <label for="floatingPassword">Senha</label>
                             </div>
                             <div class="d-grid">
-                                <button class="btn btn-primary btn-login text-uppercase fw-bold" @onclick="(() => Logar(request))" type="submit">
+                                <button class="btn btn-primary btn-login text-uppercase fw-bold" @onclick="(() => Logar(request))" type="button">
                                     Sign
                                     in
                                 </button>
                             </div>
                         </form>
+                        @if (resultadoJson.Logado)
+                        {
+                            <div>
+                                <h1>@resultadoJson.Mensagem</h1>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <h1>@resultadoJson.Mensagem</h1>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -35,11 +47,10 @@
 @code {
 
     RequisicaoLoginDTO request = new RequisicaoLoginDTO();
+    RespostaLoginDTO resultadoJson = new RespostaLoginDTO();
 
     public async Task<RespostaLoginDTO> Logar(RequisicaoLoginDTO request)
     {
-        var response = await _userService.Logar(request);
-
-        return response;
+       return await _userService.Logar(request);
     }
 }
