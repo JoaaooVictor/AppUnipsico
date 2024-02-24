@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AppUnipsico.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("usuario")]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioServico _usuarioServico;
