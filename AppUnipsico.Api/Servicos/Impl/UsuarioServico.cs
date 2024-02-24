@@ -2,10 +2,15 @@
 using AppUnipsico.Api.Models;
 using AppUnipsico.Api.Models.Enums;
 using AppUnipsico.Api.Services.Interfaces;
+using AppUnipsico.Api.Utilidades;
 using AppUnipsico.Api.Utils;
 using AppUnipsico.Models.DTOs;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace AppUnipsico.Api.Services.Impl
 {
@@ -24,35 +29,24 @@ namespace AppUnipsico.Api.Services.Impl
             _context = context;
         }
 
-        public async Task CreateUserAsync(UsuarioModel usuarioModel)
-        {
-            await _context.Usuarios.AddAsync(usuarioModel);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<UsuarioModel> BuscaUsuarioPorId(Guid usuarioId)
-        {
-            return await _context.Usuarios.FirstOrDefaultAsync(x => x.UsuarioId == usuarioId);
-        }
-
         public async Task<IEnumerable<UsuarioModel>> BuscaTodosAlunos()
         {
-            return await BuscaUsuarioPorTipo((int)TipoUsuarioEnum.Aluno);
+            return await _context.Usuarios.Where(x => x.TipoUsuarioId == (int)TipoUsuarioEnum.Aluno && x.UsuarioAtivo).ToListAsync();
         }
 
         public async Task<IEnumerable<UsuarioModel>> BuscaTodosPacientes()
         {
-            return await BuscaUsuarioPorTipo((int)TipoUsuarioEnum.Paciente);
+            return await _context.Usuarios.Where(x => x.TipoUsuarioId == (int)TipoUsuarioEnum.Paciente && x.UsuarioAtivo).ToListAsync();
         }
 
         public async Task<IEnumerable<UsuarioModel>> BuscaTodosProfessores()
         {
-            return await BuscaUsuarioPorTipo((int)TipoUsuarioEnum.Professor);
+            return await _context.Usuarios.Where(x => x.TipoUsuarioId == (int)TipoUsuarioEnum.Professor && x.UsuarioAtivo).ToListAsync();
         }
 
         public async Task<UsuarioModel> CriaUsuarioAsync(CriaUsuarioDTO criaUsuarioDto)
         {
-            var tipoUsuario = await _userTypeService.GetUserTypeByIdAsync(criaUsuarioDto.UserTypeId);
+            var tipoUsuario = await _userTypeService.BuscaTipoUsuarioPorId(criaUsuarioDto.TipoUsuarioId);
 
             if (criaUsuarioDto != null && tipoUsuario != null)
             {
@@ -63,8 +57,8 @@ namespace AppUnipsico.Api.Services.Impl
                     UsuarioEmail = criaUsuarioDto.Email,
                     UsuarioId = Guid.NewGuid(),
                     UsuarioAtivo = true,
-                    UsuarioSenha = _criptografia.CriptografaSenha(criaUsuarioDto.Password),
-                    UsuarioDataNascimento = FormatacaoUtilidades.FormataData(criaUsuarioDto.DateOfBirth),
+                    UsuarioSenha = _criptografia.CriptografaSenha(criaUsuarioDto.Senha),
+                    UsuarioDataNascimento = FormatacaoUtilidades.FormataData(criaUsuarioDto.DataNascimento),
                     UsuarioDataRegistro = DateTime.Now,
                     TipoUsuarioId = tipoUsuario.TipoUsuarioId,
                     TipoUsuario = null!,
@@ -74,7 +68,8 @@ namespace AppUnipsico.Api.Services.Impl
 
                 if (userCreated is null)
                 {
-                    await CreateUserAsync(usuarioModel);
+                    await _context.Usuarios.AddAsync(usuarioModel);
+                    await _context.SaveChangesAsync();
                     return usuarioModel;
                 }
                 else
@@ -86,11 +81,9 @@ namespace AppUnipsico.Api.Services.Impl
             return null;
         }
 
-        public async Task<bool> ValidaCredenciaisAsync(RequisicaoLoginDTO logaUsuarioDto)
+        public async Task<UsuarioModel> BuscaUsuarioPorId(Guid usuarioId)
         {
-            var response = await LogaUsuarioAsync(logaUsuarioDto);
-
-            return response is null ? false : true;
+            return await _context.Usuarios.FirstOrDefaultAsync(x => x.UsuarioId == usuarioId);
         }
 
         public async Task<UsuarioModel> BuscaUsuarioPorCpf(UsuarioModel usuarioModel)
@@ -107,29 +100,60 @@ namespace AppUnipsico.Api.Services.Impl
             }
         }
 
-        public async Task<UsuarioModel> LogaUsuarioAsync(RequisicaoLoginDTO requisicaoLoginDto)
+        public async Task<string> LogarUsuarioAsync(RequisicaoLoginDTO requisicaoLoginDto)
         {
-            var userModel = _mapper.Map<UsuarioModel>(requisicaoLoginDto);
+            var usuario = _mapper.Map<UsuarioModel>(requisicaoLoginDto);
 
-            var user = await _context.Usuarios.Where(x => x.UsuarioCpf == FormatacaoUtilidades.FormataCpf(userModel.UsuarioCpf))
+            var usuarioModel = await _context.Usuarios.Where(x => x.UsuarioCpf == FormatacaoUtilidades.FormataCpf(usuario.UsuarioCpf))
                 .Include(u => u.TipoUsuario)
                 .FirstOrDefaultAsync();
 
-            if (user != null && !string.IsNullOrEmpty(userModel.UsuarioSenha))
+            if (usuarioModel != null && !string.IsNullOrEmpty(usuarioModel.UsuarioSenha))
             {
-                if (_criptografia.VerificaSenha(userModel.UsuarioSenha, user.UsuarioSenha))
+                if (_criptografia.VerificaSenha(usuario.UsuarioSenha, usuarioModel.UsuarioSenha))
                 {
-                    return user;
+                    return GeraTokenJwt(usuarioModel);
                 }
             }
-
 
             return null;
         }
 
-        public async Task<IEnumerable<UsuarioModel>> BuscaUsuarioPorTipo(int userTypeId)
+        public async Task<string> ValidaCredenciaisAsync(RequisicaoLoginDTO logaUsuarioDto)
         {
-            return await _context.Usuarios.Where(x => x.TipoUsuarioId == userTypeId && x.UsuarioAtivo).ToListAsync();
+            var response = await LogarUsuarioAsync(logaUsuarioDto);
+
+            if (!string.IsNullOrEmpty(response))
+            {
+                return response.ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string GeraTokenJwt(UsuarioModel usuario)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(Segredos.ChaveSecretaToken);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Email, usuario.UsuarioEmail),
+                    new Claim(ClaimTypes.Name, usuario.UsuarioNome),
+                    new Claim("IdUsuario", usuario.UsuarioId.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddHours(12),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
         }
     }
 }

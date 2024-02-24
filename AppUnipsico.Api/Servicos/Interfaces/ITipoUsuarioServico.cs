@@ -4,6 +4,6 @@ namespace AppUnipsico.Api.Services.Interfaces
 {
     public interface ITipoUsuarioServico
     {
-        public Task<TipoUsuarioModel> GetUserTypeByIdAsync(int id);
+        public Task<TipoUsuarioModel> BuscaTipoUsuarioPorId(int id);
     }
 }

@@ -1,8 +1,12 @@
 using AppUnipsico.Api.Data.Context;
 using AppUnipsico.Api.Services.Impl;
 using AppUnipsico.Api.Services.Interfaces;
+using AppUnipsico.Api.Utilidades;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +18,23 @@ builder.Services.AddScoped<IUsuarioServico, UsuarioServico>();
 builder.Services.AddScoped<ICriptografiaServico, CriptografiaServico>();
 builder.Services.AddScoped<ITipoUsuarioServico, TipoUsuarioServico>();
 builder.Services.AddScoped<IConsultaServico, ConsultaServico>();
+
+builder.Services.AddAuthorization();
+
+var chaveSecreta = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Segredos.ChaveSecretaToken));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = chaveSecreta
+        };
+    });
 
 builder.Services.AddCors();
 
@@ -31,7 +52,7 @@ var app = builder.Build();
 app.UseCors(policy =>
 {
     policy
-        .WithOrigins("https://localhost:7242","http://localhost:5154")
+        .WithOrigins("https://localhost:7242", "http://localhost:5154")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .WithHeaders(HeaderNames.ContentType);

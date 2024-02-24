@@ -45,12 +45,12 @@ namespace AppUnipsico.Api.Controllers
         {
             var autorizado = await _usuarioServico.ValidaCredenciaisAsync(userLoginDto);
 
-            if (!autorizado)
+            if (string.IsNullOrEmpty(autorizado))
             {
                 return Unauthorized();
             }
 
-            return Ok("Usuário autenticado!");
+            return Ok(autorizado);
         }
     }
 }

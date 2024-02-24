@@ -14,7 +14,7 @@ namespace AppUnipsico.Api.Services.Impl
             _context = context;
         }
 
-        public async Task<TipoUsuarioModel> GetUserTypeByIdAsync(int id)
+        public async Task<TipoUsuarioModel> BuscaTipoUsuarioPorId(int id)
         {
             return await _context.TiposUsuarios.SingleOrDefaultAsync(x => x.TipoUsuarioId == id);
         }
