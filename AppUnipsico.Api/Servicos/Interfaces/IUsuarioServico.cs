@@ -1,7 +1,7 @@
 ﻿using AppUnipsico.Api.Models;
 using AppUnipsico.Models.DTOs;
 
-namespace AppUnipsico.Api.Services.Interfaces
+namespace AppUnipsico.Api.Servicos.Interfaces
 {
     public interface IUsuarioServico
     {

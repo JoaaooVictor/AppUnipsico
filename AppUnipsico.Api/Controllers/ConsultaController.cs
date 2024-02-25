@@ -1,11 +1,11 @@
-﻿using AppUnipsico.Api.Services.Interfaces;
+﻿using AppUnipsico.Api.Servicos.Interfaces;
 using AppUnipsico.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppUnipsico.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/consulta")]
     public class ConsultaController : ControllerBase
     {
         private readonly IConsultaServico _consultaServico;
@@ -17,16 +17,27 @@ namespace AppUnipsico.Api.Controllers
 
         [HttpPost]
         [Route("agendar-consulta")]
-        public async Task<ActionResult> ScheduleConsult(AgendaConsultaDTO agendaConsultaDTO)
+        public async Task<ActionResult> AgendarConsulta(RequisicaoAgendaConsultaDTO agendaConsultaDTO)
         {
-            var ok = await _consultaServico.AgendaConsulta(agendaConsultaDTO.ConsultDate, agendaConsultaDTO.PatientId);
-
-            if (ok)
+            try
             {
-                return Ok(agendaConsultaDTO);
+                var resposta = await _consultaServico.AgendarConsulta(agendaConsultaDTO);
+
+                if (!resposta.Erro)
+                {
+                    return Ok(resposta);
+                }
+
+                return BadRequest(resposta);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
-            return BadRequest("Erro ao agendar a consulta, tente novamente!");
+
+            
         }
     }
 }

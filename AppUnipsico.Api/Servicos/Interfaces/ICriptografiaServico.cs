@@ -1,4 +1,4 @@
-﻿namespace AppUnipsico.Api.Services.Interfaces
+﻿namespace AppUnipsico.Api.Servicos.Interfaces
 {
     public interface ICriptografiaServico
     {

@@ -1,9 +1,10 @@
 ﻿using AppUnipsico.Api.Models;
+using AppUnipsico.Models.DTOs;
 
-namespace AppUnipsico.Api.Services.Interfaces
+namespace AppUnipsico.Api.Servicos.Interfaces
 {
     public interface IConsultaServico
     {
-        public Task<bool> AgendaConsulta(DateTime dateConsult, Guid ConsultId);
+        public Task<RespostaAgendaConsultaDTO> AgendarConsulta(RequisicaoAgendaConsultaDTO agendaConsultaDTO);
     }
 }

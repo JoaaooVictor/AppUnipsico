@@ -1,18 +1,19 @@
-﻿using AppUnipsico.Api.Services.Interfaces;
+﻿using AppUnipsico.Api.Servicos.Interfaces;
 using AppUnipsico.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppUnipsico.Api.Controllers
 {
     [ApiController]
-    [Route("usuario")]
+    [Route("api/usuario")]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioServico _usuarioServico;
 
-        public UsuarioController(IUsuarioServico userService)
+
+        public UsuarioController(IUsuarioServico usuarioServico)
         {
-            _usuarioServico = userService;
+            _usuarioServico = usuarioServico;
         }
 
         [HttpPost]
@@ -41,7 +42,7 @@ namespace AppUnipsico.Api.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult> LogaUsuarioAsync(RequisicaoLoginDTO userLoginDto)
+        public async Task<ActionResult> LogarUsuarioAsync(RequisicaoLoginDTO userLoginDto)
         {
             try
             {

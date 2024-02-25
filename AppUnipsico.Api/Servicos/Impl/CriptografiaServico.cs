@@ -1,4 +1,4 @@
-﻿using AppUnipsico.Api.Services.Interfaces;
+﻿using AppUnipsico.Api.Servicos.Interfaces;
 
 namespace AppUnipsico.Api.Services.Impl
 {

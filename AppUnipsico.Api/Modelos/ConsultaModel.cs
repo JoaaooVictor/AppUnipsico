@@ -6,7 +6,7 @@ namespace AppUnipsico.Api.Models
     {
         public Guid ConsultaId { get; set; }
         public StatusConsulta ConsultaStatus { get; set; }
-        public DateTime ConsultaDataRealizacao { get; set; }
+        public DateTime DataConsulta { get; set; }
         public Guid PacienteId { get; set; }
         public PacienteModel Paciente { get; set; } = new PacienteModel();
 

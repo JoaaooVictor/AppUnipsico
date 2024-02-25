@@ -1,6 +1,7 @@
 using AppUnipsico.Api.Data.Context;
 using AppUnipsico.Api.Services.Impl;
-using AppUnipsico.Api.Services.Interfaces;
+using AppUnipsico.Api.Servicos.Impl;
+using AppUnipsico.Api.Servicos.Interfaces;
 using AppUnipsico.Api.Utilidades;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IPacienteServico, PacienteServico>();
+builder.Services.AddScoped<IProfessorServico, ProfessorServico>();
+builder.Services.AddScoped<IAlunoServico, AlunoServico>();
 builder.Services.AddScoped<IUsuarioServico, UsuarioServico>();
 builder.Services.AddScoped<ICriptografiaServico, CriptografiaServico>();
 builder.Services.AddScoped<ITipoUsuarioServico, TipoUsuarioServico>();

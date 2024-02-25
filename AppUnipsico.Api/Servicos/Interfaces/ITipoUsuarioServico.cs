@@ -1,6 +1,6 @@
 ﻿using AppUnipsico.Api.Models;
 
-namespace AppUnipsico.Api.Services.Interfaces
+namespace AppUnipsico.Api.Servicos.Interfaces
 {
     public interface ITipoUsuarioServico
     {

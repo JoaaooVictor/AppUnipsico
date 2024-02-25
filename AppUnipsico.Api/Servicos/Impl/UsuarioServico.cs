@@ -1,7 +1,7 @@
 ﻿using AppUnipsico.Api.Data.Context;
 using AppUnipsico.Api.Models;
 using AppUnipsico.Api.Models.Enums;
-using AppUnipsico.Api.Services.Interfaces;
+using AppUnipsico.Api.Servicos.Interfaces;
 using AppUnipsico.Api.Utilidades;
 using AppUnipsico.Api.Utils;
 using AppUnipsico.Models.DTOs;
@@ -19,14 +19,20 @@ namespace AppUnipsico.Api.Services.Impl
         private readonly IMapper _mapper;
         private readonly ICriptografiaServico _criptografia;
         private readonly ITipoUsuarioServico _userTypeService;
+        private readonly IPacienteServico _pacienteServico;
+        private readonly IAlunoServico _alunoServico;
+        private readonly IProfessorServico _professorServico;
         private readonly AppDbContext _context;
 
-        public UsuarioServico(IMapper mapper, ICriptografiaServico encryptService, ITipoUsuarioServico userTypeService, AppDbContext context)
+        public UsuarioServico(IMapper mapper, ICriptografiaServico encryptService, ITipoUsuarioServico userTypeService, AppDbContext context, IPacienteServico pacienteServico, IAlunoServico alunoServico, IProfessorServico professorServico)
         {
             _mapper = mapper;
             _criptografia = encryptService;
             _userTypeService = userTypeService;
             _context = context;
+            _pacienteServico = pacienteServico;
+            _alunoServico = alunoServico;
+            _professorServico = professorServico;
         }
 
         public async Task<IEnumerable<UsuarioModel>> BuscaTodosAlunos()
@@ -68,8 +74,18 @@ namespace AppUnipsico.Api.Services.Impl
 
                 if (userCreated is null)
                 {
-                    await _context.Usuarios.AddAsync(usuarioModel);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        await _context.Usuarios.AddAsync(usuarioModel);
+                        await _context.SaveChangesAsync();
+
+                        await CriaUsuarioEspecifico(usuarioModel);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
                     return usuarioModel;
                 }
                 else
@@ -125,8 +141,8 @@ namespace AppUnipsico.Api.Services.Impl
 
             if (response is not null)
             {
-                return new RespostaLoginDTO() 
-                { 
+                return new RespostaLoginDTO()
+                {
                     Logado = true,
                     Token = response,
                     Mensagem = "Usuário logado com sucesso!"
@@ -162,6 +178,22 @@ namespace AppUnipsico.Api.Services.Impl
             var tokenString = tokenHandler.WriteToken(token);
 
             return tokenString;
+        }
+
+        public async Task CriaUsuarioEspecifico(UsuarioModel usuarioModel)
+        {
+            switch (usuarioModel.TipoUsuarioId)
+            {
+                case 1:
+                    await _pacienteServico.CriaPacienteAsync(usuarioModel);
+                    break;
+                case 2:
+                    await _alunoServico.CriaAlunoAsync(usuarioModel);
+                    break;
+                case 3:
+                    await _professorServico.CriaProfessorAsync(usuarioModel);
+                    break;
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AppUnipsico.Api.Data.Context;
 using AppUnipsico.Api.Models;
-using AppUnipsico.Api.Services.Interfaces;
+using AppUnipsico.Api.Servicos.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppUnipsico.Api.Services.Impl
