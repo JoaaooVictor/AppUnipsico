@@ -3,7 +3,7 @@ using AppUnipsico.Api.Models;
 using AppUnipsico.Api.Servicos.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace AppUnipsico.Api.Services.Impl
+namespace AppUnipsico.Api.Servicos.Impl
 {
     public class TipoUsuarioServico : ITipoUsuarioServico
     {

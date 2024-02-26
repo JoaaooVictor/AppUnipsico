@@ -11,8 +11,6 @@ namespace AppUnipsico.Api.Data.Context
         public DbSet<UsuarioModel> Usuarios { get; set; }
         public DbSet<TipoUsuarioModel> TiposUsuarios { get; set; }
         public DbSet<PacienteModel> Pacientes { get; set; }
-        public DbSet<AlunoModel> Alunos { get; set; }
-        public DbSet<ProfessorModel> Professores { get; set; }
         public DbSet<InstituicaoModel> Instituicoes { get; set; }
         public DbSet<EnderecoModel> Enderecos { get; set; }
         public DbSet<EstagioModel> Estagios { get; set; }

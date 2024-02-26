@@ -5,7 +5,7 @@ using AppUnipsico.Api.Servicos.Interfaces;
 using AppUnipsico.Models.DTOs;
 using AutoMapper;
 
-namespace AppUnipsico.Api.Services.Impl
+namespace AppUnipsico.Api.Servicos.Impl
 {
     public class ConsultaServico : IConsultaServico
     {

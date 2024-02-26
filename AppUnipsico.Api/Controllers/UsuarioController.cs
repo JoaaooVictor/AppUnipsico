@@ -24,7 +24,7 @@ namespace AppUnipsico.Api.Controllers
             {
                 var usuarioCriado = await _usuarioServico.CriaUsuarioAsync(createUserDto);
 
-                if (usuarioCriado != null)
+                if (usuarioCriado is not null)
                 {
                     return Ok(usuarioCriado);
                 }

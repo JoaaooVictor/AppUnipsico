@@ -3,6 +3,7 @@ using System;
 using AppUnipsico.Api.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppUnipsico.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240225221146_Ajuste-Usuarios")]
+    partial class AjusteUsuarios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,7 +148,7 @@ namespace AppUnipsico.Api.Migrations
                         new
                         {
                             TipoUsuarioId = 1,
-                            TipoUsuarioDataRegistro = new DateTime(2024, 2, 25, 21, 55, 31, 136, DateTimeKind.Local).AddTicks(8234),
+                            TipoUsuarioDataRegistro = new DateTime(2024, 2, 25, 19, 11, 46, 338, DateTimeKind.Local).AddTicks(900),
                             TipoUsuarioDescricao = "Paciente do consultório",
                             TipoUsuarioEhAdmin = false,
                             TipoUsuarioNome = "Paciente"
@@ -153,7 +156,7 @@ namespace AppUnipsico.Api.Migrations
                         new
                         {
                             TipoUsuarioId = 2,
-                            TipoUsuarioDataRegistro = new DateTime(2024, 2, 25, 21, 55, 31, 136, DateTimeKind.Local).AddTicks(8252),
+                            TipoUsuarioDataRegistro = new DateTime(2024, 2, 25, 19, 11, 46, 338, DateTimeKind.Local).AddTicks(918),
                             TipoUsuarioDescricao = "Aluno de Psicologia",
                             TipoUsuarioEhAdmin = false,
                             TipoUsuarioNome = "Aluno"
@@ -161,7 +164,7 @@ namespace AppUnipsico.Api.Migrations
                         new
                         {
                             TipoUsuarioId = 3,
-                            TipoUsuarioDataRegistro = new DateTime(2024, 2, 25, 21, 55, 31, 136, DateTimeKind.Local).AddTicks(8254),
+                            TipoUsuarioDataRegistro = new DateTime(2024, 2, 25, 19, 11, 46, 338, DateTimeKind.Local).AddTicks(921),
                             TipoUsuarioDescricao = "Professor e Admin",
                             TipoUsuarioEhAdmin = true,
                             TipoUsuarioNome = "Professor"
@@ -170,48 +173,48 @@ namespace AppUnipsico.Api.Migrations
 
             modelBuilder.Entity("AppUnipsico.Api.Models.UsuarioModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("UsuarioId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Cpf")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("DataNascimento")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("DataRegistro")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Senha")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("TipoUsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<bool>("UsuarioAtivo")
+                        .HasColumnType("tinyint(1)");
 
-                    b.HasIndex("Cpf")
-                        .IsUnique();
+                    b.Property<string>("UsuarioCpf")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("UsuarioDataNascimento")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("UsuarioDataRegistro")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UsuarioEmail")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UsuarioNome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UsuarioSenha")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("UsuarioId");
 
                     b.HasIndex("TipoUsuarioId");
+
+                    b.HasIndex("UsuarioCpf")
+                        .IsUnique();
 
                     b.ToTable("Usuarios");
 
@@ -220,11 +223,25 @@ namespace AppUnipsico.Api.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("AppUnipsico.Api.Models.AlunoModel", b =>
+                {
+                    b.HasBaseType("AppUnipsico.Api.Models.UsuarioModel");
+
+                    b.HasDiscriminator().HasValue("AlunoModel");
+                });
+
             modelBuilder.Entity("AppUnipsico.Api.Models.PacienteModel", b =>
                 {
                     b.HasBaseType("AppUnipsico.Api.Models.UsuarioModel");
 
                     b.HasDiscriminator().HasValue("PacienteModel");
+                });
+
+            modelBuilder.Entity("AppUnipsico.Api.Models.ProfessorModel", b =>
+                {
+                    b.HasBaseType("AppUnipsico.Api.Models.UsuarioModel");
+
+                    b.HasDiscriminator().HasValue("ProfessorModel");
                 });
 
             modelBuilder.Entity("AppUnipsico.Api.Models.ConsultaModel", b =>
@@ -240,7 +257,7 @@ namespace AppUnipsico.Api.Migrations
 
             modelBuilder.Entity("AppUnipsico.Api.Models.EstagioModel", b =>
                 {
-                    b.HasOne("AppUnipsico.Api.Models.UsuarioModel", "Aluno")
+                    b.HasOne("AppUnipsico.Api.Models.AlunoModel", "Aluno")
                         .WithMany()
                         .HasForeignKey("AlunoId")
                         .OnDelete(DeleteBehavior.Cascade)

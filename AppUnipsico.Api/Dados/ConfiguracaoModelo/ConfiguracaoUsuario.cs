@@ -9,14 +9,10 @@ namespace AppUnipsico.Api.Data.ConfigurationModel
         public void Configure(EntityTypeBuilder<UsuarioModel> builder)
         {
             builder
-                .HasKey(u => u.UsuarioId);
+                .HasKey(u => u.Id);
 
             builder
-                .HasIndex(u => u.UsuarioCpf)
-                .IsUnique();
-
-            builder
-                .HasIndex(u => u.UsuarioEmail)
+                .HasIndex(u => u.Cpf)
                 .IsUnique();
         }
     }

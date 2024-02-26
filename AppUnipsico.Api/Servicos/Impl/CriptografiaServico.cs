@@ -1,6 +1,6 @@
 ﻿using AppUnipsico.Api.Servicos.Interfaces;
 
-namespace AppUnipsico.Api.Services.Impl
+namespace AppUnipsico.Api.Servicos.Impl
 {
     public class CriptografiaServico : ICriptografiaServico
     {

@@ -29,15 +29,11 @@ namespace AppUnipsico.Api.Controllers
                 }
 
                 return BadRequest(resposta);
-
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
-
-            
         }
     }
 }

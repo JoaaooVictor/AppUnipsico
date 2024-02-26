@@ -2,14 +2,14 @@
 {
     public class UsuarioModel
     {
-        public Guid UsuarioId { get; set; }
-        public string UsuarioNome { get; set; } = string.Empty;
-        public DateTime UsuarioDataNascimento { get; set; }
-        public string UsuarioCpf { get; set; } = string.Empty;
-        public string UsuarioSenha { get; set; } = string.Empty;
-        public string UsuarioEmail { get; set; } = string.Empty;
-        public bool UsuarioAtivo { get; set; }
-        public DateTime UsuarioDataRegistro { get; set; }
+        public Guid Id { get; set; }
+        public string Nome { get; set; } = string.Empty;
+        public DateTime DataNascimento { get; set; }
+        public string Cpf { get; set; } = string.Empty;
+        public string Senha { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public bool Ativo { get; set; }
+        public DateTime DataRegistro { get; set; }
         public int TipoUsuarioId { get; set; }
         public virtual TipoUsuarioModel TipoUsuario { get; set; } = new TipoUsuarioModel();
     }

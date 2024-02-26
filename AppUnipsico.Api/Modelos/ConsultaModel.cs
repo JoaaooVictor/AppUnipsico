@@ -9,6 +9,5 @@ namespace AppUnipsico.Api.Models
         public DateTime DataConsulta { get; set; }
         public Guid PacienteId { get; set; }
         public PacienteModel Paciente { get; set; } = new PacienteModel();
-
     }
 }
