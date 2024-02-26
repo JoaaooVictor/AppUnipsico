@@ -94,16 +94,16 @@ namespace AppUnipsico.Api.Servicos.Impl
 
             try
             {
-                var consultaExiste = await _context.Consultas.FindAsync(consulta);
+                var consultaExistente = await _context.Consultas.FindAsync(consulta);
 
-                if (consultaExiste is not null)
+                if (consultaExistente is not null)
                 {
                     var consultaAtualizada = new ConsultaModel
                     {
-                        ConsultaId = consulta.ConsultaId,
-                        ConsultaStatus = consulta.ConsultaStatus,
-                        DataConsulta = consulta.DataConsulta,
-                        PacienteId = consulta.PacienteId  
+                        ConsultaId = consultaExistente.ConsultaId,
+                        ConsultaStatus = consultaExistente.ConsultaStatus,
+                        DataConsulta = consultaExistente.DataConsulta,
+                        PacienteId = consultaExistente.PacienteId  
                     }; 
 
                     _context.Consultas.Update(consultaAtualizada);
@@ -111,7 +111,6 @@ namespace AppUnipsico.Api.Servicos.Impl
 
                     trataRetornoDTO.Erro = false;
                     trataRetornoDTO.Mensagem = "Consulta editada com sucesso!";
-
                 }
                 else
                 {
@@ -146,10 +145,11 @@ namespace AppUnipsico.Api.Servicos.Impl
             var caminhoArquivo = @"C:\Users\joaov\OneDrive\Documentos\Documentos PCC\dataconsulta.xlsx";
             
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
             using (var package = new ExcelPackage(new FileInfo(caminhoArquivo)))
             {
                 var worksheet = package.Workbook.Worksheets.FirstOrDefault();
-                if (worksheet != null)
+                if (worksheet is not null)
                 {
                     int rowCount = worksheet.Dimension.Rows;
                     var consultas = new List<DataConsultaModel>();
