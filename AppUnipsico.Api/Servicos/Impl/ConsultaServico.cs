@@ -1,35 +1,32 @@
 ﻿using AppUnipsico.Api.Data.Context;
+using AppUnipsico.Api.Modelos.DTOs;
 using AppUnipsico.Api.Models;
 using AppUnipsico.Api.Models.Enums;
 using AppUnipsico.Api.Servicos.Interfaces;
 using AppUnipsico.Models.DTOs;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 namespace AppUnipsico.Api.Servicos.Impl
 {
     public class ConsultaServico : IConsultaServico
     {
         private readonly AppDbContext _context;
-        private readonly IUsuarioServico _usuarioServico;
-        private readonly IMapper _mapper;
 
-        public ConsultaServico(AppDbContext context, IMapper mapper, IUsuarioServico usuarioServico)
+        public ConsultaServico(AppDbContext context)
         {
             _context = context;
-            _mapper = mapper;
-            _usuarioServico = usuarioServico;
         }
 
-        public async Task<RespostaAgendaConsultaDTO> AgendarConsulta(RequisicaoAgendaConsultaDTO agendaConsultaDTO)
+        public async Task<TrataRetornoDTO> AgendarConsulta(RequisicaoAgendaConsultaDTO agendaConsultaDTO)
         {
-            var respostaAgendaDto = new RespostaAgendaConsultaDTO();
+            var trataRetornoDTO = new TrataRetornoDTO();
 
             if (agendaConsultaDTO is not null)
             {
                 try
                 {
-                    var paciente = await _usuarioServico.BuscaUsuarioPorId(agendaConsultaDTO.RequisicaoPacienteId);
-
                     var consultaModel = new ConsultaModel()
                     {
                         ConsultaStatus = StatusConsulta.Agendada,
@@ -41,17 +38,104 @@ namespace AppUnipsico.Api.Servicos.Impl
                     await _context.Consultas.AddAsync(consultaModel);
                     await _context.SaveChangesAsync();
 
-                    respostaAgendaDto.Erro = false;
-                    respostaAgendaDto.Mensagem = "Consulta agendada!";
+                    trataRetornoDTO.Erro = false;
+                    trataRetornoDTO.Mensagem = "Consulta agendada!";
                 }
                 catch (Exception ex)
                 {
-                    respostaAgendaDto.Erro = true;
-                    respostaAgendaDto.Mensagem = $"Erro ao agendar a consulta : {ex.Message}";
+                    trataRetornoDTO.Erro = true;
+                    trataRetornoDTO.Mensagem = $"Erro ao agendar a consulta : {ex.Message}";
                 }
             }
 
-            return respostaAgendaDto;
+            return trataRetornoDTO;
         }
+
+        public async Task<TrataRetornoDTO> DesmarcarConsulta(RequisicaoAgendaConsultaDTO agendaConsultaDTO)
+        {
+            var trataRetornoDTO = new TrataRetornoDTO();
+
+            try
+            {
+                var consulta = await _context.Consultas.FindAsync(agendaConsultaDTO.RequisicaoConsultaId);
+
+                if (consulta is not null)
+                {
+                    consulta.ConsultaStatus = StatusConsulta.Disponivel;
+
+                    _context.Consultas.Remove(consulta);
+                    await _context.SaveChangesAsync();
+
+                    trataRetornoDTO.Erro = false;
+                    trataRetornoDTO.Mensagem = "Consulta desmarcada com sucesso!";
+                }
+                else
+                {
+                    trataRetornoDTO.Erro = true;
+                    trataRetornoDTO.Mensagem = "Consulta não encontrada.";
+                }
+            }
+            catch (Exception ex)
+            {
+                trataRetornoDTO.Erro = true;
+                trataRetornoDTO.Mensagem = $"Erro ao desmarcar a consulta: {ex.Message}";
+            }
+
+            return trataRetornoDTO;
+        }
+
+        public async Task<TrataRetornoDTO> EditarConsulta(ConsultaModel consulta)
+        {
+            var trataRetornoDTO = new TrataRetornoDTO();
+
+            try
+            {
+                var consultaExiste = await _context.Consultas.FindAsync(consulta);
+
+                if (consultaExiste is not null)
+                {
+                    var consultaAtualizada = new ConsultaModel
+                    {
+                        ConsultaId = consulta.ConsultaId,
+                        ConsultaStatus = consulta.ConsultaStatus,
+                        DataConsulta = consulta.DataConsulta,
+                        PacienteId = consulta.PacienteId  
+                    }; 
+
+                    _context.Consultas.Update(consultaAtualizada);
+                    await _context.SaveChangesAsync();
+
+                    trataRetornoDTO.Erro = false;
+                    trataRetornoDTO.Mensagem = "Consulta editada com sucesso!";
+
+                }
+                else
+                {
+                    trataRetornoDTO.Erro = true;
+                    trataRetornoDTO.Mensagem = "Consulta não encontrada!";
+                }
+            }
+            catch (Exception ex)
+            {
+                trataRetornoDTO.Erro = true;
+                trataRetornoDTO.Mensagem = $"Erro ao editar a consulta: {ex.Message}";
+            }
+
+            return trataRetornoDTO;
+        }
+
+        public async Task<IEnumerable<ConsultaModel>> ListarConsultaPorMes(int ano, int mes)
+        {
+            var dataInicio = new DateTime(ano, mes, 1);
+            var dataFim = dataInicio.AddMonths(1).AddDays(-1);
+
+            return await _context.Consultas.Where(c => c.DataConsulta >= dataInicio && c.DataConsulta <= dataFim).ToListAsync();
+        }
+
+        public async Task<IEnumerable<ConsultaModel>> ListarConsultasPorPaciente(Guid pacienteId)
+        {
+            return await _context.Consultas.Where(c => c.PacienteId == pacienteId).ToListAsync();
+        }
+
     }
 }

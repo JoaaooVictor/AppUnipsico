@@ -2,6 +2,7 @@
 {
     public enum StatusConsulta
     {
+        Disponivel = 0,
         Agendada = 1,
         Concluida = 2,
         Remarcada = 3,

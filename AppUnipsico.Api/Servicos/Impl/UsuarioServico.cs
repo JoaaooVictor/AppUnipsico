@@ -49,14 +49,14 @@ namespace AppUnipsico.Api.Servicos.Impl
         {
             var trataRetornoDTO = new TrataRetornoDTO();
             var usuario = _mapper.Map<UsuarioModel>(criaUsuarioDto);
-            var tipoUsuario = await _userTypeService.BuscaTipoUsuarioPorId(criaUsuarioDto.TipoUsuarioId);
+
             var usuarioEhExistente = await BuscaUsuarioPorCpf(usuario);
 
             if (usuarioEhExistente is null)
             {
                 try
                 {
-                    if (criaUsuarioDto is not null && tipoUsuario is not null)
+                    if (criaUsuarioDto is not null)
                     {
                         var usuarioModel = new UsuarioModel
                         {
@@ -68,8 +68,7 @@ namespace AppUnipsico.Api.Servicos.Impl
                             Senha = _criptografia.CriptografaSenha(criaUsuarioDto.Senha),
                             DataNascimento = FormatacaoUtilidades.FormataData(criaUsuarioDto.DataNascimento),
                             DataRegistro = DateTime.Now,
-                            TipoUsuarioId = tipoUsuario.TipoUsuarioId,
-                            TipoUsuario = null!,
+                            TipoUsuarioId = criaUsuarioDto.TipoUsuarioId,
                         };
 
                         await _context.Usuarios.AddAsync(usuarioModel);
@@ -78,7 +77,6 @@ namespace AppUnipsico.Api.Servicos.Impl
                         trataRetornoDTO.Mensagem = "Usuário registrado com sucesso!";
                         trataRetornoDTO.Erro = false;
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -95,21 +93,82 @@ namespace AppUnipsico.Api.Servicos.Impl
             return trataRetornoDTO;
         }
 
+        public async Task<TrataRetornoDTO> CriaPacienteAsync(CriaUsuarioDTO criaUsuarioDto)
+        {
+            var trataRetornoDTO = new TrataRetornoDTO();
+
+            trataRetornoDTO = await CriaUsuarioAsync(new CriaUsuarioDTO()
+            {
+                TipoUsuarioId = (int)TipoUsuarioEnum.Paciente,
+                Cpf = criaUsuarioDto.Cpf,
+                DataNascimento = criaUsuarioDto.DataNascimento,
+                Email = criaUsuarioDto.Email,
+                NomeUsuario = criaUsuarioDto.NomeUsuario,
+                Senha = criaUsuarioDto.Senha,
+            });
+
+            return trataRetornoDTO;
+        }
+
+        public async Task<TrataRetornoDTO> CriaProfessorAsync(CriaUsuarioDTO criaUsuarioDto)
+        {
+            var trataRetornoDTO = new TrataRetornoDTO();
+
+            trataRetornoDTO = await CriaUsuarioAsync(new CriaUsuarioDTO()
+            {
+                TipoUsuarioId = (int)TipoUsuarioEnum.Professor,
+                Cpf = criaUsuarioDto.Cpf,
+                DataNascimento = criaUsuarioDto.DataNascimento,
+                Email = criaUsuarioDto.Email,
+                NomeUsuario = criaUsuarioDto.NomeUsuario,
+                Senha = criaUsuarioDto.Senha,
+            });
+
+            return trataRetornoDTO;
+        }
+
+        public async Task<TrataRetornoDTO> CriaAlunoAsync(CriaUsuarioDTO criaUsuarioDto)
+        {
+            var trataRetornoDTO = new TrataRetornoDTO();
+
+            trataRetornoDTO = await CriaUsuarioAsync(new CriaUsuarioDTO()
+            {
+                TipoUsuarioId = (int)TipoUsuarioEnum.Aluno,
+                Cpf = criaUsuarioDto.Cpf,
+                DataNascimento = criaUsuarioDto.DataNascimento,
+                Email = criaUsuarioDto.Email,
+                NomeUsuario = criaUsuarioDto.NomeUsuario,
+                Senha = criaUsuarioDto.Senha,
+            });
+
+            return trataRetornoDTO;
+        }
+
         public async Task<UsuarioModel> BuscaUsuarioPorId(Guid usuarioId)
         {
             return await _context.Usuarios.FirstOrDefaultAsync(x => x.Id == usuarioId);
         }
 
-        public async Task<UsuarioModel> BuscaUsuarioPorCpf(UsuarioModel usuarioModel)
+        public async Task<TrataRetornoDTO> BuscaUsuarioPorCpf(UsuarioModel usuario)
         {
-            var userCreated = await _context.Usuarios.SingleOrDefaultAsync(x => x.Cpf.Trim() == usuarioModel.Cpf.Trim());
-
-            if (userCreated is not null)
+            var trataRetornoDTO = new TrataRetornoDTO();
+            try
             {
-                return userCreated;
+                trataRetornoDTO.DTO = await _context.Usuarios.SingleOrDefaultAsync(x => x.Cpf == usuario.Cpf.Trim());
+
+                if (trataRetornoDTO.DTO is not null)
+                {
+                    trataRetornoDTO.Erro = false;
+                    trataRetornoDTO.Mensagem = "Usuário já existente";
+                }
+            }
+            catch (Exception ex)
+            {
+                trataRetornoDTO.Erro = false;
+                trataRetornoDTO.Mensagem = $"Erro: {ex.Message}";
             }
 
-            return usuarioModel;
+            return trataRetornoDTO;
 
         }
 
@@ -157,10 +216,8 @@ namespace AppUnipsico.Api.Servicos.Impl
             };
         }
 
-        public TrataRetornoDTO GeraTokenJwt(UsuarioModel usuario)
+        public string GeraTokenJwt(UsuarioModel usuario)
         {
-            var trataRetornoDTO = new TrataRetornoDTO();
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Segredos.ChaveSecretaToken);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -169,7 +226,7 @@ namespace AppUnipsico.Api.Servicos.Impl
                 {
                     new Claim(ClaimTypes.Email, usuario.Email),
                     new Claim(ClaimTypes.Name, usuario.Nome),
-                    new Claim("IdUsuario", usuario.Id.ToString())
+                    new Claim("idUsuario", usuario.Id.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddHours(12),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
@@ -177,9 +234,9 @@ namespace AppUnipsico.Api.Servicos.Impl
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            trataRetornoDTO.DTO = tokenHandler.WriteToken(token);
+            var tokenString = tokenHandler.WriteToken(token);
 
-            return trataRetornoDTO;
+            return tokenString;
         }
 
     }

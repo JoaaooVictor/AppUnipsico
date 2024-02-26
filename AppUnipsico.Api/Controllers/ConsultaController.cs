@@ -1,9 +1,11 @@
 ﻿using AppUnipsico.Api.Servicos.Interfaces;
 using AppUnipsico.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppUnipsico.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/consulta")]
     public class ConsultaController : ControllerBase
@@ -16,7 +18,7 @@ namespace AppUnipsico.Api.Controllers
         }
 
         [HttpPost]
-        [Route("agendar-consulta")]
+        [Route("agendar")]
         public async Task<ActionResult> AgendarConsulta(RequisicaoAgendaConsultaDTO agendaConsultaDTO)
         {
             try
