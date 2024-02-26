@@ -62,3 +62,9 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.botoesLogin {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
