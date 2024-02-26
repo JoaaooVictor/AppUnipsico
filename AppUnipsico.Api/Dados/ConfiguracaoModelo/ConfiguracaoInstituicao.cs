@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using AppUnipsico.Api.Models;
 
-namespace AppUnipsico.Api.Data.ConfigurationModel
+namespace AppUnipsico.Api.Dados.ConfiguracaoModelo
 {
     public class ConfiguracaoInstituicao : IEntityTypeConfiguration<InstituicaoModel>
     {

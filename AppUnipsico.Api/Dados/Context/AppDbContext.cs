@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using AppUnipsico.Api.Data.ConfigurationModel;
 using AppUnipsico.Api.Models;
+using AppUnipsico.Api.Modelos;
+using AppUnipsico.Api.Dados.ConfiguracaoModelo;
 
 namespace AppUnipsico.Api.Data.Context
 {
@@ -15,6 +16,7 @@ namespace AppUnipsico.Api.Data.Context
         public DbSet<EnderecoModel> Enderecos { get; set; }
         public DbSet<EstagioModel> Estagios { get; set; }
         public DbSet<ConsultaModel> Consultas { get; set; }
+        public DbSet<DataConsultaModel> DatasConsultas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +26,7 @@ namespace AppUnipsico.Api.Data.Context
             modelBuilder.ApplyConfiguration(new ConfiguracaoEstagio());
             modelBuilder.ApplyConfiguration(new ConfiguracaoInstituicao());
             modelBuilder.ApplyConfiguration(new ConfiguracaoEndereco());
+            modelBuilder.ApplyConfiguration(new ConfiguracaoDataConsulta());
         }
     }
 }

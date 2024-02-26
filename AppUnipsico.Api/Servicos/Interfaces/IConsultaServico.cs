@@ -11,5 +11,6 @@ namespace AppUnipsico.Api.Servicos.Interfaces
         public Task<TrataRetornoDTO> EditarConsulta(ConsultaModel consulta);
         public Task<IEnumerable<ConsultaModel>> ListarConsultasPorPaciente(Guid pacienteId);
         public Task<IEnumerable<ConsultaModel>> ListarConsultaPorMes(int ano, int mes);
+        public Task LerEInserirConsultas();
     }
 }

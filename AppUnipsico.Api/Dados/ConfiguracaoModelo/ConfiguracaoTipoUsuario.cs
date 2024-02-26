@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using AppUnipsico.Api.Models;
 using AppUnipsico.Api.Models.Enums;
 
-namespace AppUnipsico.Api.Data.ConfigurationModel
+namespace AppUnipsico.Api.Dados.ConfiguracaoModelo
 {
     public class ConfiguracaoTipoUsuario : IEntityTypeConfiguration<TipoUsuarioModel>
     {

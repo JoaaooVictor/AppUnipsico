@@ -1,4 +1,5 @@
-﻿using AppUnipsico.Api.Models.Enums;
+﻿using AppUnipsico.Api.Modelos;
+using AppUnipsico.Api.Models.Enums;
 
 namespace AppUnipsico.Api.Models
 {
@@ -6,7 +7,8 @@ namespace AppUnipsico.Api.Models
     {
         public Guid ConsultaId { get; set; }
         public StatusConsulta ConsultaStatus { get; set; }
-        public DateTime DataConsulta { get; set; }
+        public Guid DataConsultaId { get; set; }
+        public DataConsultaModel DataConsulta { get; set; }
         public Guid PacienteId { get; set; }
         public PacienteModel Paciente { get; set; } = new PacienteModel();
     }

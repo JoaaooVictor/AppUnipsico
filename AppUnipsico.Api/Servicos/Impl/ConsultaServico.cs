@@ -1,4 +1,5 @@
 ﻿using AppUnipsico.Api.Data.Context;
+using AppUnipsico.Api.Modelos;
 using AppUnipsico.Api.Modelos.DTOs;
 using AppUnipsico.Api.Models;
 using AppUnipsico.Api.Models.Enums;
@@ -30,7 +31,10 @@ namespace AppUnipsico.Api.Servicos.Impl
                     var consultaModel = new ConsultaModel()
                     {
                         ConsultaStatus = StatusConsulta.Agendada,
-                        DataConsulta = agendaConsultaDTO.RequisicaoDataConsulta,
+                        DataConsulta = new DataConsultaModel
+                        {
+                            DataConsulta = agendaConsultaDTO.RequisicaoDataConsulta,
+                        },
                         ConsultaId = agendaConsultaDTO.RequisicaoConsultaId,
                         PacienteId = agendaConsultaDTO.RequisicaoPacienteId,
                     };
@@ -129,7 +133,7 @@ namespace AppUnipsico.Api.Servicos.Impl
             var dataInicio = new DateTime(ano, mes, 1);
             var dataFim = dataInicio.AddMonths(1).AddDays(-1);
 
-            return await _context.Consultas.Where(c => c.DataConsulta >= dataInicio && c.DataConsulta <= dataFim).ToListAsync();
+            return await _context.Consultas.Where(c => c.DataConsulta.DataConsulta >= dataInicio && c.DataConsulta.DataConsulta <= dataFim).ToListAsync();
         }
 
         public async Task<IEnumerable<ConsultaModel>> ListarConsultasPorPaciente(Guid pacienteId)
@@ -137,5 +141,35 @@ namespace AppUnipsico.Api.Servicos.Impl
             return await _context.Consultas.Where(c => c.PacienteId == pacienteId).ToListAsync();
         }
 
+        public async Task LerEInserirConsultas()
+        {
+            var caminhoArquivo = @"C:\Users\joaov\OneDrive\Documentos\Documentos PCC\dataconsulta.xlsx";
+            
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage(new FileInfo(caminhoArquivo)))
+            {
+                var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (worksheet != null)
+                {
+                    int rowCount = worksheet.Dimension.Rows;
+                    var consultas = new List<DataConsultaModel>();
+
+                    for (int row = 2; row <= rowCount; row++) 
+                    {
+                        var dataString = worksheet.Cells[row, 1].Value.ToString();
+                        if (DateTime.TryParse(dataString, out DateTime dataHora))
+                        {
+                            consultas.Add(new DataConsultaModel 
+                            { 
+                                DataConsulta = dataHora,
+                            });
+                        }
+                    }
+
+                    await _context.DatasConsultas.AddRangeAsync(consultas);
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AppUnipsico.Api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/consulta")]
     public class ConsultaController : ControllerBase
@@ -36,6 +35,15 @@ namespace AppUnipsico.Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("datas")]
+        public async Task<ActionResult> GerarDatasConsultas()
+        {
+            await _consultaServico.LerEInserirConsultas();
+
+            return Ok();
         }
     }
 }
