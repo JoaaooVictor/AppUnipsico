@@ -2,7 +2,8 @@
 @using AppUnipsico.Web.Services.InterfacesWeb
 @inject IUserServiceWeb _userService;
 
-<body>
+@if (!exibirFormularioCadastroUsuario)
+{
     <div class="container">
         <div class="row">
             <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
@@ -20,11 +21,10 @@
                             </div>
                             <div class="d-grid">
                                 <button class="btn btn-primary btn-login text-uppercase fw-bold" @onclick="(() => Logar(request))" type="submit">
-                                    Sign
-                                    in
+                                    Sign in
                                 </button>
-                                <button class="btn btn-primary btn-login text-uppercase fw-bold" @onclick="(() => Logar(request))" type="submit">
-Cadastro
+                                <button class="btn btn-primary btn-login text-uppercase fw-bold" @onclick="ExibirFormularioCadastroUsuario" type="button">
+                                    Cadastro
                                 </button>
                             </div>
                         </form>
@@ -33,16 +33,24 @@ Cadastro
             </div>
         </div>
     </div>
-</body>
+}
+else
+{
+    <CadastroUsuarioPaciente></CadastroUsuarioPaciente>
+}
 
 @code {
-
+    private bool exibirFormularioCadastroUsuario = false;
     RequestLoginDto request = new RequestLoginDto();
 
     public async Task<ResponseLoginDto> Logar(RequestLoginDto request)
     {
         var response = await _userService.Logar(request);
-
         return response;
+    }
+
+    private void ExibirFormularioCadastroUsuario()
+    {
+        exibirFormularioCadastroUsuario = true;
     }
 }
