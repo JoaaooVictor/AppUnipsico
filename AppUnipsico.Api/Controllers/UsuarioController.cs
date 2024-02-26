@@ -24,13 +24,13 @@ namespace AppUnipsico.Api.Controllers
             {
                 var usuarioCriado = await _usuarioServico.CriaUsuarioAsync(createUserDto);
 
-                if (usuarioCriado is not null)
+                if (!usuarioCriado.Erro)
                 {
                     return Ok(usuarioCriado);
                 }
                 else
                 {
-                    return NotFound("Erro ao cadastrar o usuário!");
+                    return BadRequest(usuarioCriado);
                 }
 
             }
