@@ -1,6 +1,6 @@
 ﻿using AppUnipsico.Api.Modelos.DTOs;
-using AppUnipsico.Api.Models;
 using AppUnipsico.Models.DTOs;
+using AppUnipsico.Models.Models;
 
 namespace AppUnipsico.Api.Servicos.Interfaces
 {
@@ -8,9 +8,9 @@ namespace AppUnipsico.Api.Servicos.Interfaces
     {
         public Task<TrataRetornoDTO> AgendarConsulta(RequisicaoAgendaConsultaDTO agendaConsultaDTO);
         public Task<TrataRetornoDTO> DesmarcarConsulta(RequisicaoAgendaConsultaDTO agendaConsultaDTO);
-        public Task<TrataRetornoDTO> EditarConsulta(ConsultaModel consulta);
-        public Task<IEnumerable<ConsultaModel>> ListarConsultasPorPaciente(Guid pacienteId);
-        public Task<IEnumerable<ConsultaModel>> ListarConsultaPorMes(int ano, int mes);
+        public Task<TrataRetornoDTO> EditarConsulta(Consulta consulta);
+        public Task<IEnumerable<Consulta>> ListarConsultasPorPaciente(Guid pacienteId);
+        public Task<IEnumerable<Consulta>> ListarConsultaPorMes(int ano, int mes);
         public Task LerEInserirConsultas();
     }
 }

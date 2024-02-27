@@ -1,14 +1,14 @@
-﻿using AppUnipsico.Api.Modelos;
-using AppUnipsico.Api.Modelos.DTOs;
+﻿using AppUnipsico.Api.Modelos.DTOs;
+using AppUnipsico.Models.Models.Usuarios;
 
 namespace AppUnipsico.Api.Servicos.Interfaces
 {
     public interface IAlunoServico
     {
-        public TrataRetornoDTO GeraPdfEstagio(AlunoModel aluno);
-        public string CarregaDadosDoAluno(string arquivoHtml, AlunoModel aluno, string nomeDoArquivoPdf);
-        public string RetornaNomeDoArquivo(AlunoModel aluno);
+        public TrataRetornoDTO GeraPdfEstagio(Aluno aluno);
+        public string CarregaDadosDoAluno(string arquivoHtml, Aluno aluno, string nomeDoArquivoPdf);
+        public string RetornaNomeDoArquivo(Aluno aluno);
         public void SalvaArquivoPdf(Stream streamPdf, string nomeDoArquivoPdf);
-        public Task<AlunoModel?> BuscaAlunoPorCpf(string cpf);
+        public Task<Aluno?> BuscaAlunoPorCpf(string cpf);
     }
 }

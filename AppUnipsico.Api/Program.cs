@@ -1,6 +1,3 @@
-using AppUnipsico.Api.Data.Context;
-using AppUnipsico.Api.Servicos.Impl;
-using AppUnipsico.Api.Servicos.Interfaces;
 using AppUnipsico.Api.Utilidades;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +11,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IUsuarioServico, UsuarioServico>();
-builder.Services.AddScoped<ICriptografiaServico, CriptografiaServico>();
-builder.Services.AddScoped<ITipoUsuarioServico, TipoUsuarioServico>();
-builder.Services.AddScoped<IConsultaServico, ConsultaServico>();
-builder.Services.AddScoped<IAlunoServico, AlunoServico>();
+//builder.Services.AddScoped<IUsuarioServico, UsuarioServico>();
+//builder.Services.AddScoped<ICriptografiaServico, CriptografiaServico>();
+//builder.Services.AddScoped<IConsultaServico, ConsultaServico>();
+//builder.Services.AddScoped<IAlunoServico, AlunoServico>();
 
 builder.Services.AddAuthorization();
 
@@ -43,10 +39,12 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 var connectionString = builder.Configuration.GetConnectionString("App");
 
-builder.Services.AddDbContext<AppDbContext>(opt =>
-{
-    opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-});
+
+
+//builder.Services.AddDbContext<AppDbContext>(opt =>
+//{
+//    opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+//});
 
 var app = builder.Build();
 

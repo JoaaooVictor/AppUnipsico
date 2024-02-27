@@ -20,18 +20,19 @@ namespace AppUnipsico.Api.Controllers
         [Route("cadastro")]
         public async Task<ActionResult> CriaUsuarioAsync(CriaUsuarioDTO createUserDto)
         {
+            return BadRequest("Falta implementar");
             try
             {
-                var usuarioCriado = await _usuarioServico.CriaUsuarioAsync(createUserDto);
+               // var usuarioCriado = await _usuarioServico.CriaUsuarioAsync(createUserDto);
 
-                if (!usuarioCriado.Erro)
-                {
-                    return Ok(usuarioCriado);
-                }
-                else
-                {
-                    return BadRequest(usuarioCriado);
-                }
+                //if (!usuarioCriado.Erro)
+                //{
+                //    return Ok(usuarioCriado);
+                //}
+                //else
+                //{
+                //    return BadRequest(usuarioCriado);
+                //}
 
             }
             catch (Exception ex)
@@ -44,16 +45,17 @@ namespace AppUnipsico.Api.Controllers
         [Route("login")]
         public async Task<ActionResult> LogarUsuarioAsync(RequisicaoLoginDTO userLoginDto)
         {
+            return BadRequest("Falta implementar");
             try
             {
-                var resposta = await _usuarioServico.ValidaCredenciaisAsync(userLoginDto);
+             //   var resposta = await _usuarioServico.ValidaCredenciaisAsync(userLoginDto);
 
-                if (resposta.Logado)
-                {
-                    return Ok(resposta);
-                }
+                //if (resposta.Logado)
+                //{
+                //    return Ok(resposta);
+                //}
 
-                return Unauthorized(resposta);
+                //return Unauthorized(resposta);
             }
             catch (Exception ex)
             {

@@ -1,0 +1,4 @@
+﻿vai na pasta AppUnipscico.Web e digite:
+
+dotnet ef migrations add [nome_migration] --project ../AppUnipsico.Models
+dotnet ef database update
