@@ -1,8 +1,9 @@
-﻿using AppUnipsico.Api.Data.Context;
-using AppUnipsico.Api.Modelos;
+﻿using AppUnipsico.Api.Modelos;
 using AppUnipsico.Api.Modelos.DTOs;
 using AppUnipsico.Api.Servicos.Interfaces;
 using AppUnipsico.Api.Utilidades;
+using AppUnipsico.Models;
+using AppUnipsico.Models.Models.Usuarios;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,14 +11,14 @@ namespace AppUnipsico.Api.Servicos.Impl
 {
     public class AlunoServico : IAlunoServico
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public AlunoServico(AppDbContext context)
+        public AlunoServico(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public TrataRetornoDTO GeraPdfEstagio(AlunoModel aluno)
+        public TrataRetornoDTO GeraPdfEstagio(Aluno aluno)
         {
             var trataRetornoDTO = new TrataRetornoDTO();
 
@@ -33,7 +34,7 @@ namespace AppUnipsico.Api.Servicos.Impl
             return trataRetornoDTO;
         }
 
-        public string CarregaDadosDoAluno(string arquivoHtml, AlunoModel aluno, string nomeDoArquivoPdf)
+        public string CarregaDadosDoAluno(string arquivoHtml, Aluno aluno, string nomeDoArquivoPdf)
         {
             var conteudohtmlTratado = arquivoHtml;
 
@@ -51,14 +52,14 @@ namespace AppUnipsico.Api.Servicos.Impl
             }
         }
 
-        public string RetornaNomeDoArquivo(AlunoModel aluno)
+        public string RetornaNomeDoArquivo(Aluno aluno)
         {
             var nomeArquivo = $"aluno_{aluno.Ra}_{DateTime.Now}.pdf";
 
             return nomeArquivo;
         }
 
-        public async Task<AlunoModel?> BuscaAlunoPorCpf(string cpf)
+        public async Task<Aluno?> BuscaAlunoPorCpf(string cpf)
         {
             return await _context.Alunos.Where(x => x.Cpf == cpf).Include(x => x.TipoUsuario).FirstOrDefaultAsync();
         }
