@@ -17,11 +17,13 @@ namespace AppUnipsico.Api.Data.Context
         public DbSet<EstagioModel> Estagios { get; set; }
         public DbSet<ConsultaModel> Consultas { get; set; }
         public DbSet<DataConsultaModel> DatasConsultas { get; set; }
+        public DbSet<AlunoModel> Alunos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ConfiguracaoTipoUsuario());
             modelBuilder.ApplyConfiguration(new ConfiguracaoUsuario());
+            modelBuilder.ApplyConfiguration(new ConfiguracaoAluno());
             modelBuilder.ApplyConfiguration(new ConfiguracaoConsulta());
             modelBuilder.ApplyConfiguration(new ConfiguracaoEstagio());
             modelBuilder.ApplyConfiguration(new ConfiguracaoInstituicao());

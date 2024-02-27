@@ -9,5 +9,6 @@ namespace AppUnipsico.Api.Servicos.Interfaces
         public string CarregaDadosDoAluno(string arquivoHtml, AlunoModel aluno, string nomeDoArquivoPdf);
         public string RetornaNomeDoArquivo(AlunoModel aluno);
         public void SalvaArquivoPdf(Stream streamPdf, string nomeDoArquivoPdf);
+        public Task<AlunoModel?> BuscaAlunoPorCpf(string cpf);
     }
 }

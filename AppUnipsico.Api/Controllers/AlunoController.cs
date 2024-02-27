@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AppUnipsico.Api.Controllers
 {
     [ApiController]
-    [Route("api/alunos")]
+    [Route("api/aluno")]
     public class AlunoController : ControllerBase
     {
         private readonly IAlunoServico _alunoServico;
@@ -16,10 +16,12 @@ namespace AppUnipsico.Api.Controllers
         }
 
         [HttpGet]
-        [Route("gera-documento-estagio")]
-        public ActionResult GeraDocumentoEstagio(AlunoModel alunoModel)
+        [Route("gera-documento")]
+        public async Task<ActionResult> GeraDocumentoEstagio()
         {
-            _alunoServico.GeraPdfEstagio(alunoModel);
+            var alunoId = "0000000000";
+            var aluno = await _alunoServico.BuscaAlunoPorCpf(alunoId);
+            _alunoServico.GeraPdfEstagio(aluno!);
 
             return Ok();
         }

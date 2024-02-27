@@ -1,0 +1,21 @@
+﻿body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.assinaturas {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.assinatura {
+    width: 40%;
+    border-top: 1px solid #000;
+    text-align: center;
+}

@@ -1,12 +1,10 @@
 ﻿using AppUnipsico.Api.Data.Context;
 using AppUnipsico.Api.Modelos;
 using AppUnipsico.Api.Modelos.DTOs;
-using AppUnipsico.Api.Models;
 using AppUnipsico.Api.Servicos.Interfaces;
 using AppUnipsico.Api.Utilidades;
 using HtmlAgilityPack;
-using System.Drawing.Imaging;
-using System.Drawing.Printing;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppUnipsico.Api.Servicos.Impl
 {
@@ -27,7 +25,7 @@ namespace AppUnipsico.Api.Servicos.Impl
             var arquivoHtml = HtmlDocument.HtmlEncode(nomeDoArquivoPdf);
             var conteudoHtmlTratado = CarregaDadosDoAluno(arquivoHtml, aluno, nomeDoArquivoPdf);
 
-            using(var streamPdf = HtmlUtilidades.ConverteHtmlParaPdf(conteudoHtmlTratado))
+            using (var streamPdf = HtmlUtilidades.ConverteHtmlParaPdf(conteudoHtmlTratado))
             {
                 SalvaArquivoPdf(streamPdf, nomeDoArquivoPdf);
             }
@@ -49,7 +47,7 @@ namespace AppUnipsico.Api.Servicos.Impl
             using (var ms = new FileStream(caminhoArquivoPdf, FileMode.Create))
             {
                 streamPdf.CopyTo(ms);
-                streamPdf.Seek(0, SeekOrigin.Begin);    
+                streamPdf.Seek(0, SeekOrigin.Begin);
             }
         }
 
@@ -57,7 +55,12 @@ namespace AppUnipsico.Api.Servicos.Impl
         {
             var nomeArquivo = $"aluno_{aluno.Ra}_{DateTime.Now}.pdf";
 
-            return nomeArquivo; 
+            return nomeArquivo;
+        }
+
+        public async Task<AlunoModel?> BuscaAlunoPorCpf(string cpf)
+        {
+            return await _context.Alunos.Where(x => x.Cpf == cpf).Include(x => x.TipoUsuario).FirstOrDefaultAsync();
         }
     }
 }

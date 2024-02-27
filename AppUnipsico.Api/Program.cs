@@ -18,6 +18,7 @@ builder.Services.AddScoped<IUsuarioServico, UsuarioServico>();
 builder.Services.AddScoped<ICriptografiaServico, CriptografiaServico>();
 builder.Services.AddScoped<ITipoUsuarioServico, TipoUsuarioServico>();
 builder.Services.AddScoped<IConsultaServico, ConsultaServico>();
+builder.Services.AddScoped<IAlunoServico, AlunoServico>();
 
 builder.Services.AddAuthorization();
 
